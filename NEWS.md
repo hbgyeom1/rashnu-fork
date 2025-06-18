@@ -1,3 +1,7 @@
+# rashnu 0.1.1
+
+* Adjusted `numericInput` step size in the Shiny interface for finer control over input values.
+
 # rashnu 0.1.0
 
 ## New features

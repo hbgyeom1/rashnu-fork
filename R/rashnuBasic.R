@@ -65,10 +65,10 @@ rashnuBasic <- function(){
           )
         ),
         uiOutput("alpha_ui"),
-        numericInput("power", "Power (1 - Beta):", value = 0.8),
+        numericInput("power", "Power (1 - Beta):", value = 0.8, step = 0.1),
         conditionalPanel(
           condition = "input.test_type == 'ni'",
-          numericInput("margin", "Non-inferiority Margin :", value = 1.3)
+          numericInput("margin", "Non-inferiority Margin :", value = 1.3, step = 0.1)
         ),
         conditionalPanel(
           condition = "input.test_type == 'sup'",
@@ -203,15 +203,15 @@ rashnuBasic <- function(){
 
     output$alpha_ui <- renderUI({
       if (input$test_type == "ni") {
-        numericInput("alpha", "Significance Level (alpha):", value = 0.025)
+        numericInput("alpha", "Significance Level (alpha):", value = 0.025, step = 0.025)
       } else {
-        numericInput("alpha", "Significance Level (alpha):", value = 0.05)
+        numericInput("alpha", "Significance Level (alpha):", value = 0.05, step = 0.025)
       }
     })
 
     output$alloc_ui <- renderUI({
       if (input$test_type %in% c("ni","sup")){
-        numericInput("alloc", "Allocation Ratio :", value = 1)
+        numericInput("alloc", "Allocation Ratio :", value = 1, step = 0.1)
       }
     })
 
@@ -219,19 +219,19 @@ rashnuBasic <- function(){
       if (input$test_type %in% c("ni", "sup")){
         fluidRow(
           column(6,
-                 numericInput("yrsurv1", "Survival Probability (Standard Group):", value = 0.305)
+                 numericInput("yrsurv1", "Survival Probability (Standard Group):", value = 0.3, step = 0.1)
           ),
           column(6,
-                 numericInput("yrsurv2", "Survival Probability (Test Group):", value = 0.435)
+                 numericInput("yrsurv2", "Survival Probability (Test Group):", value = 0.5, step = 0.1)
           )
         )
       }else{
         fluidRow(
           column(6,
-                 numericInput("p1", "Null survival probability:", value = 0.305)
+                 numericInput("p1", "Null survival probability:", value = 0.3, step = 0.1)
           ),
           column(6,
-                 numericInput("p2", "Alternative survival probability", value = 0.435)
+                 numericInput("p2", "Alternative survival probability", value = 0.5, step = 0.1)
           )
         )
       }

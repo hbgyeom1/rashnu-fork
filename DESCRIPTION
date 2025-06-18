@@ -1,6 +1,6 @@
 Package: rashnu
 Title: Balanced Sample Size and Power Calculation Tools
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Sungho", "Choi", , "1213sam0@gmail.com", role = c("aut", "cre")),
     person("Zarathu", role = c("cph", "fnd"))
@@ -19,4 +19,5 @@ Suggests:
     covr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://zarathucorp.github.io/rashnu/, https://github.com/zarathucorp/rashnu, 
+URL: https://zarathucorp.github.io/rashnu/, https://github.com/zarathucorp/rashnu
+BugReports: https://github.com/zarathucorp/rashnu/issues
