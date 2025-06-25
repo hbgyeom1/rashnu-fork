@@ -2,6 +2,8 @@ name: Auto Release on Version Change
 
 on:
   push:
+    paths:
+      - DESCRIPTION
     branches:
       - main
 
