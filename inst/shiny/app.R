@@ -64,21 +64,26 @@ server <- function(input, output, session) {
   })
 
   output$result <- renderText({
-    switch(input$tool,
-           "one_mean_size" = result_one_mean_size(input),
-           "two_mean_size" = result_two_mean_size(input),
-           "k_mean_size" = result_k_mean_size(input),
-           "one_prop_size" = result_one_prop_size(input),
-           "two_prop_size" = result_two_prop_size(input),
-           "pair_prop_size" = result_pair_prop_size(input),
-           "k_prop_size" = result_k_prop_size(input),
-           "coxph_size" = result_coxph_size(input),
-           "or_size" = result_or_size(input),
-           "sccs_size" = result_sccs_size(input),
-           "one_norm_size" = result_one_norm_size(input),
-           "one_bino_size" = result_one_bino_size(input)
-    )
-  })
+    res <- switch(input$tool,
+                  "one_mean_size" = result_one_mean_size(input),
+                  "two_mean_size" = result_two_mean_size(input),
+                  "k_mean_size" = result_k_mean_size(input),
+                  "one_prop_size" = result_one_prop_size(input),
+                  "two_prop_size" = result_two_prop_size(input),
+                  "pair_prop_size" = result_pair_prop_size(input),
+                  "k_prop_size" = result_k_prop_size(input),
+                  "coxph_size" = result_coxph_size(input),
+                  "or_size" = result_or_size(input),
+                  "sccs_size" = result_sccs_size(input),
+                  "one_norm_size" = result_one_norm_size(input),
+                  "one_bino_size" = result_one_bino_size(input)
+                  )
+    if (input$mode == "size") {
+      paste("Sample size: ", res)
+    } else if (input$mode == "power") {
+      paste("Power: ", res)
+    }
+    })
 }
 
 shinyApp(ui, server)
