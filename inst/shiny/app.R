@@ -17,7 +17,7 @@ ui <- page_sidebar(
       "Compare k Proportion" = "k_prop_size",
       "Test Time-To-Event Data" = "coxph_size",
       "Test Odds Ratio" = "or_size",
-      "SCCS" = "sccs_size",
+      "SCCS, Alt-2" = "sccs_size",
       "One Normal" = "one_norm_size",
       "One Binomial" = "one_bino_size"
     )),
