@@ -1,28 +1,30 @@
-#' Sample Size or Power Calculation for Self-Controlled Case Series (SCCS) Design
+#' Sample Size or Power for Self-Controlled Case Series (SCCS)
 #'
-#' This function calculates either the required number of cases (`n`) or the statistical power for Self-Controlled Case Series (SCCS) studies.
-#' It uses a normal approximation to estimate sample size or power based on the relative incidence rate and time-at-risk.
+#' Calculates sample size or power for self-controlled case series studies.
 #'
-#' @param p Numeric. Relative incidence (i.e., incidence rate ratio between exposed and unexposed periods).
-#' @param r Numeric. Proportion of the observation period that is considered at risk (i.e., exposure time fraction).
-#' @param alpha Numeric. Significance level (Type I error rate).
-#' @param beta Numeric (optional). Type II error rate (1 - power). Required when calculating required sample size.
-#' @param n Integer (optional). Number of cases. Required when calculating power.
+#' @param p Numeric. True relative incidence (risk period vs baseline).
+#' @param r Numeric. Proportion of observation time that is risk period.
+#' @param alpha Numeric. Type I error rate.
+#' @param beta Numeric (optional). Type II error rate. Required for sample size calculation.
+#' @param n Integer (optional). Sample size. Required for power calculation.
 #'
-#' @return
-#' - If `beta` is provided and `n` is NULL, returns the required number of cases (rounded up) to achieve the desired power.
-#' - If `n` is provided and `beta` is NULL, returns the achieved power.
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `n` is given).
 #'
-#' @details
-#' The SCCS design compares event rates during exposed and unexposed periods within the same individual, controlling for fixed confounders.
-#' This function applies a normal approximation to estimate power or sample size, assuming the log-relative incidence follows a normal distribution.
+#' @note
+#' Only one of `beta` (for sample size calculation) or `n` (for power calculation) should be specified.
+#'
+#' Required arguments:
+#' - For sample size: `p`, `r`, `alpha`, `beta`
+#' - For power: `p`, `r`, `alpha`, `n`
 #'
 #' @examples
-#' # Required number of cases for SCCS study
-#' sccs_size(p = 1.5, r = 0.1, alpha = 0.05, beta = 0.2)
+#' # Sample size
+#' sccs_size(p = 3, r = 42/365,
+#'           alpha = 0.05, beta = 0.2)
 #'
-#' # Power of SCCS study with 150 cases
-#' sccs_size(p = 1.5, r = 0.1, alpha = 0.05, n = 150)
+#' # Power
+#' sccs_size(p = 3, r = 42/365,
+#'           alpha = 0.05, n = 54)
 #'
 #' @export
 sccs_size <- function(p, r, alpha, beta = NULL, n = NULL) {

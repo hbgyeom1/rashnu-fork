@@ -1,31 +1,54 @@
-#' Sample Size or Power Calculation for Odds Ratio Tests
+#' Sample Size or Power for Odds Ratio Test
 #'
-#' This function computes the required sample size or the achieved power for hypothesis tests comparing two independent proportions
-#' using the odds ratio. It supports equality, non-inferiority, and equivalence tests based on the logarithm of the odds ratio.
+#' Calculates sample size or power for odds ratio test.
 #'
-#' @param pA Numeric. Proportion in group A (e.g., treatment group).
-#' @param pB Numeric. Proportion in group B (e.g., control group).
-#' @param delta Numeric (optional). Non-inferiority or equivalence margin on the log-odds scale. Required for `"non-inferiority"` and `"equivalence"` tests.
-#' @param kappa Numeric. Ratio of sample sizes (nB/nA). Defaults to 1 (equal sample sizes).
-#' @param alpha Numeric. Significance level (Type I error rate).
-#' @param beta Numeric (optional). Type II error rate (1 - power). Required when computing required sample size.
-#' @param nB Integer (optional). Sample size for group B. Required when computing power.
-#' @param test_type Character. Type of hypothesis test. Must be one of `"equality"`, `"non-inferiority"`, or `"equivalence"`.
+#' @param pA Numeric. True proportion of group A.
+#' @param pB Numeric. True proportion of group B.
+#' @param delta Numeric (optional). Margin for `"non-inferiority"` or `"equivalence"` test. Required for `"non-inferiority"` or `"equivalence"` test.
+#' @param kappa Numeric. Ratio of sample sizes (nA/nB). Default is 1.
+#' @param alpha Numeric. Type I error rate.
+#' @param beta Numeric (optional). Type II error rate. Required for sample size calculation.
+#' @param nB Integer (optional). Sample size for group B. Required for power calculation.
+#' @param test_type Character. `"equality"`, `"non-inferiority"`, or `"equivalence"`. Default is `"2-side"`.
 #'
-#' @return
-#' - If `beta` is provided and `nB` is NULL, returns the required sample size for group B (rounded up); group A size is determined by `kappa`.
-#' - If `nB` is provided and `beta` is NULL, returns the achieved power of the test.
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `nB` is given).
 #'
-#' @details
-#' The function uses a normal approximation for the distribution of the log-odds ratio. The sample size calculation accounts for group allocation ratio (`kappa`)
-#' and variance of the log-odds estimate. The margin `delta` must be specified for non-inferiority and equivalence designs.
+#' @note
+#' Only one of `beta` (for sample size calculation) or `nB` (for power calculation) should be specified.
+#'
+#' Required arguments by `test_type`:
+#' - `"equality"`:
+#'   - For sample size: `pA`, `pB`, `alpha`, `beta`
+#'   - For power: `pA`, `pB`, `alpha`, `nB`
+#'
+#' - `"non-inferiority"`/`"equivalence"`:
+#'   - For sample size: `pA`, `pB`, `delta`,  `alpha`, `beta`
+#'   - For power: `pA`, `pB`, `delta`, `alpha`, `nB`
 #'
 #' @examples
-#' # Required sample size for odds ratio equality test
-#' or_size(pA = 0.6, pB = 0.5, alpha = 0.05, beta = 0.2, test_type = "equality")
+#' # Sample size for `"equality"` test
+#' or_size(pA = 0.4, pB = 0.25, kappa = 1,
+#'         alpha = 0.05, beta = 0.2, test_type = "equality")
 #'
-#' # Power calculation for equivalence test
-#' or_size(pA = 0.55, pB = 0.5, delta = 0.2, alpha = 0.05, nB = 100, test_type = "equivalence")
+#' # Power of `"equality"` test
+#' or_size(pA = 0.4, pB = 0.25, kappa = 1,
+#'         alpha = 0.05, nB = 156, test_type = "equality")
+#'
+#' # Sample size for `"non-inferiority"` test
+#' or_size(pA = 0.4, pB = 0.25, delta = 0.2, kappa = 1,
+#'         alpha = 0.05, beta = 0.2, test_type = "non-inferiority")
+#'
+#' # Power of `"non-inferiority"` test
+#' or_size(pA = 0.4, pB = 0.25, delta = 0.2, kappa = 1,
+#'         alpha = 0.05, nB = 242, test_type = "non-inferiority")
+#'
+#' # Sample size for `"equivalence"` test
+#' or_size(pA = 0.25, pB = 0.25, delta = 0.5, kappa = 1,
+#'         alpha = 0.05, beta = 0.2, test_type = "equivalence")
+#'
+#' # Power of `"equivalence"` test
+#' or_size(pA = 0.25, pB = 0.25, delta = 0.5, kappa = 1,
+#'         alpha = 0.05, nB = 366, test_type = "equivalence")
 #'
 #' @export
 or_size <- function(pA, pB, delta = NULL, kappa = 1, alpha, beta = NULL, nB = NULL, test_type = "equality") {

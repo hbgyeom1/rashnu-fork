@@ -1,28 +1,31 @@
-#' Sample Size or Power Calculation for One-Sample Normal Test (Two-Sided)
+#' Sample Size or Power Calculation for One-Sample Normal Mean Test
 #'
-#' This function computes the required sample size or the achieved power for a two-sided test of a single population mean,
-#' assuming normally distributed data with known standard deviation.
+#' Calculates sample size or power for a two-sample normal mean test.
 #'
-#' @param mu Numeric. The true population mean under the alternative hypothesis.
-#' @param mu0 Numeric. The mean under the null hypothesis.
-#' @param sd Numeric. The known standard deviation of the population.
-#' @param alpha Numeric. Significance level (Type I error rate).
-#' @param beta Numeric (optional). Type II error rate (1 - power). Required when computing required sample size.
-#' @param n Integer (optional). Sample size. Required when computing power.
+#' @param mu Numeric. True mean.
+#' @param mu0 Numeric. Null hypothesis mean.
+#' @param sd Numeric. Standard deviation.
+#' @param alpha Numeric. Type I error rate.
+#' @param beta Numeric (optional). Type II error rate. Required for sample size calculation.
+#' @param n Integer (optional). Sample size. Required for power calculation.
 #'
-#' @return
-#' - If `beta` is provided and `n` is NULL, returns the required sample size (rounded up).
-#' - If `n` is provided and `beta` is NULL, returns the achieved power of the test.
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `n` is given).
 #'
-#' @details
-#' This function assumes a two-sided z-test for a single mean with known variance using normal approximation.
+#' @note
+#' Only one of `beta` (for sample size calculation) or `n` (for power calculation) should be specified.
+#'
+#' Required arguments:
+#' - For sample size: `"mu"`, `"mu0"`, `"sd"`, `"alpha"`, `"beta"`
+#' - For power: `"mu"`, `"mu0"`, `"sd"`, `"alpha"`, `"n"`
 #'
 #' @examples
-#' # Calculate required sample size
-#' one_norm_size(mu = 105, mu0 = 100, sd = 15, alpha = 0.05, beta = 0.2)
+#' # Sample size
+#' one_norm_size(mu = 2, mu0 = 1.5, sd = 1,
+#'               alpha = 0.05, beta = 0.2)
 #'
-#' # Calculate power with fixed sample size
-#' one_norm_size(mu = 105, mu0 = 100, sd = 15, alpha = 0.05, n = 50)
+#' # Power
+#' one_norm_size(mu = 2, mu0 = 1.5, sd = 1,
+#'               alpha = 0.05, n = 32)
 #'
 #' @export
 one_norm_size <- function(mu, mu0, sd, alpha, beta = NULL, n = NULL) {

@@ -1,30 +1,39 @@
-#' Sample Size or Power Calculation for Paired Proportion Test (McNemar's Test)
+#' Sample Size or Power for Paired-Sample Proportion Test
 #'
-#' This function calculates the required sample size or the achieved power for a paired-sample test of proportions,
-#' such as McNemar's test for binary outcomes in matched pairs (e.g., before-and-after studies or matched case-control).
+#' Calculates sample size or power for a paired-sample proportion test.
 #'
-#' @param p01 Numeric. Proportion of discordant pairs where the outcome changed from 0 to 1.
-#' @param p10 Numeric. Proportion of discordant pairs where the outcome changed from 1 to 0.
-#' @param alpha Numeric. Significance level (Type I error rate).
-#' @param beta Numeric (optional). Type II error rate (1 - power). Required when computing required sample size.
-#' @param n Integer (optional). Sample size (number of paired observations). Required when computing power.
-#' @param test_type Character. Type of hypothesis test. Must be either `"2-side"` or `"1-side"`.
+#' @param p01 Numeric. Proportion of discordant pairs with (before = 1, after = 0).
+#' @param p10 Numeric. Proportion of discordant pairs with (before = 0, after = 1).
+#' @param alpha Numeric. Type I error rate.
+#' @param beta Numeric (optional). Type II error rate. Required for sample size calculation.
+#' @param n Integer (optional). Sample size. Required for power calculation.
+#' @param test_type Character. `"2-side"` or `"1-side"`. Default is `"2-side"`.
 #'
-#' @return
-#' - If `beta` is provided and `n` is NULL, returns the required sample size (rounded up) to achieve the desired power.
-#' - If `n` is provided and `beta` is NULL, returns the achieved power.
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `n` is given).
 #'
-#' @details
-#' The test is based on the distribution of discordant pairs in a 2×2 contingency table for paired data.
-#' The formula is derived using a normal approximation for McNemar’s test.
-#' The variance includes a correction term for the squared difference of discordant proportions.
+#' @note
+#' Only one of `beta` (for sample size calculation) or `n` (for power calculation) should be specified.
+#'
+#' Required arguments:
+#' - For sample size: `p01`, `p10`, `alpha`, `beta`
+#' - For power: `p01`, `p10`, `alpha`, `n`
 #'
 #' @examples
-#' # Calculate required sample size for two-sided McNemar test
-#' pair_prop_size(p01 = 0.1, p10 = 0.2, alpha = 0.05, beta = 0.2, test_type = "2-side")
+#' # Sample size for `"2-side"` test
+#' pair_prop_size(p01 = 0.45, p10 = 0.05,
+#'                alpha = 0.1, beta = 0.1, test_type = "2-side")
 #'
-#' # Calculate power for one-sided McNemar test
-#' pair_prop_size(p01 = 0.05, p10 = 0.15, alpha = 0.05, n = 100, test_type = "1-side")
+#' # Power of `"2-side"` test
+#' pair_prop_size(p01 = 0.45, p10 = 0.05,
+#'                alpha = 0.1, n = 23, test_type = "2-side")
+#'
+#' # Sample size for `"1-side"` test
+#' pair_prop_size(p01 = 0.45, p10 = 0.05,
+#'                alpha = 0.05, beta = 0.1, test_type = "1-side")
+#'
+#' # Power of `"1-side"` test
+#' pair_prop_size(p01 = 0.45, p10 = 0.05,
+#'                alpha = 0.05, n = 23, test_type = "1-side")
 #'
 #' @export
 pair_prop_size <- function(p01, p10, alpha, beta = NULL, n = NULL, test_type = "2-side") {

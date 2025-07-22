@@ -2,7 +2,7 @@
 % Please edit documentation in R/coxph_size.R
 \name{coxph_size}
 \alias{coxph_size}
-\title{Sample Size or Power Calculation for Cox Proportional Hazards Model}
+\title{Sample Size or Power for Cox Proportional Hazards}
 \usage{
 coxph_size(
   hr,
@@ -17,43 +17,70 @@ coxph_size(
 )
 }
 \arguments{
-\item{hr}{Numeric. Hazard ratio under the alternative hypothesis.}
+\item{hr}{Numeric. True hazard ratio.}
 
-\item{hr0}{Numeric (optional). Hazard ratio under the null hypothesis. Required for \code{"2-side"} and \code{"non-inferiority"} tests.}
+\item{hr0}{Numeric (optional). Null hypothesis hazard ratio. Required for \code{"2-side"}, \code{"non-inferiority"} test.}
 
-\item{delta}{Numeric (optional). Equivalence margin on the log-hazard scale. Required for \code{"equivalence"} tests.}
+\item{delta}{Numeric (optional). Margin for \code{"equivalence test"}. Required for \code{"equivalence"} test.}
 
-\item{pE}{Numeric. Event rate (i.e., the proportion of subjects expected to experience the event).}
+\item{pE}{Numeric. Overall event probability.}
 
-\item{pA}{Numeric. Proportion of participants in the active treatment group.}
+\item{pA}{Numeric. Proportion of group A.}
 
-\item{alpha}{Numeric. Significance level (Type I error rate).}
+\item{alpha}{Numeric. Type I error rate.}
 
-\item{beta}{Numeric (optional). Type II error rate (1 - power). Required when calculating required sample size.}
+\item{beta}{Numeric (optional). Type II error rate. Required for sample size calculation.}
 
-\item{n}{Integer (optional). Total sample size. Required when calculating power.}
+\item{n}{Integer (optional). Sample size. Required for power calculation.}
 
-\item{test_type}{Character. Type of hypothesis test. Must be one of \code{"2-side"}, \code{"non-inferiority"}, or \code{"equivalence"}.}
+\item{test_type}{Character. \code{"2-side"}, \code{"non-inferiority"}, or \code{"equivalence"}. Default is \code{"2-side"}.}
 }
 \value{
-\itemize{
-\item If \code{beta} is provided and \code{n} is NULL, returns the required total sample size (rounded up).
-\item If \code{n} is provided and \code{beta} is NULL, returns the achieved power of the test.
-}
+Numeric. Returns sample size (if \code{beta} is given), or power (if \code{n} is given).
 }
 \description{
-This function calculates the required sample size or the achieved power for time-to-event analysis using the Cox proportional hazards model.
-It supports two-sided, non-inferiority, and equivalence tests based on hazard ratios and event probabilities.
+Calculates sample size or power for a cox proportional hazards model.
 }
-\details{
-The function uses the log hazard ratio scale and standard normal approximation.
-The sample size formula includes a term for \code{pE}, the proportion expected to have the event, and \code{pA}, the allocation proportion for the active group.
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{n} (for power calculation) should be specified.
+
+Required arguments by \code{test_type}:
+\itemize{
+\item \code{"2-side"}/\verb{"non-inferiority}:
+\itemize{
+\item For sample size: \code{hr}, \code{hr0}, \code{pE}, \code{pA}, \code{alpha}, \code{beta}
+\item For power: \code{hr}, \code{hr0}, \code{pE}, \code{pA}, \code{alpha}, \code{n}
+}
+\item \code{"equivalence"}:
+\itemize{
+\item For sample size: \code{hr}, \code{delta}, \code{pE}, \code{pA}, \code{alpha}, \code{beta}
+\item For power: \code{hr}, \code{delta}, \code{pE}, \code{pA}, \code{alpha}, \code{n}
+}
+}
 }
 \examples{
-# Required sample size for a two-sided test
-coxph_size(hr = 0.75, hr0 = 1, pE = 0.6, pA = 0.5, alpha = 0.05, beta = 0.2, test_type = "2-side")
+# Sample size for a `"2-side"` test
+coxph_size(hr = 2, hr0 = 1, pE = 0.8, pA = 0.5,
+           alpha = 0.05, beta = 0.2, test_type = "2-side")
 
-# Power of a non-inferiority test with given sample size
-coxph_size(hr = 0.95, hr0 = 1, pE = 0.5, pA = 0.6, alpha = 0.025, n = 200, test_type = "non-inferiority")
+# Power of `"2-side"` test
+coxph_size(hr = 2, hr0 = 1, pE = 0.8, pA = 0.5,
+           alpha = 0.05, n = 82, test_type = "2-side")
+
+# Sample size for `"non-inferiority"` test
+coxph_size(hr = 2, hr0 = 1, pE = 0.8, pA = 0.5,
+           alpha = 0.025, beta = 0.2, test_type = "non-inferiority")
+
+# Power of `"non-inferiority"` test
+coxph_size(hr = 2, hr0 = 1, pE = 0.8, pA = 0.5,
+           alpha = 0.025, n = 82, test_type = "non-inferiority")
+
+# Sample size for `"equivalence"` test
+coxph_size(hr = 1, delta = 0.5, pE = 0.8, pA = 0.5,
+           alpha = 0.05, beta = 0.2, test_type = "equivalence")
+
+# Power of `"equivalence"` test
+coxph_size(hr = 1, delta = 0.5, pE = 0.8, pA = 0.5,
+           alpha = 0.05, n = 172, test_type = "equivalence")
 
 }

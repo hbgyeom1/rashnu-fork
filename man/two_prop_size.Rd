@@ -2,7 +2,7 @@
 % Please edit documentation in R/two_prop_size.R
 \name{two_prop_size}
 \alias{two_prop_size}
-\title{Sample Size or Power Calculation for Two-Sample Proportion Test}
+\title{Sample Size or Power for Two-Sample Proportion Test}
 \usage{
 two_prop_size(
   pA,
@@ -16,41 +16,76 @@ two_prop_size(
 )
 }
 \arguments{
-\item{pA}{Numeric. Proportion in group A (e.g., treatment group).}
+\item{pA}{Numeric. True proportion of group A.}
 
-\item{pB}{Numeric. Proportion in group B (e.g., control group).}
+\item{pB}{Numeric. True proportion of group B.}
 
-\item{delta}{Numeric (optional). Non-inferiority or equivalence margin. Required for \code{"non-inferiority"} and \code{"equivalence"} tests.}
+\item{delta}{Numeric (optional). Margin for \code{"non-inferiority"} or \code{"equivalence"} test. Required for \code{"non-inferiority"} or \code{"equivalence"} test.}
 
-\item{kappa}{Numeric. Ratio of sample sizes (nB/nA). Defaults to 1 (equal sample sizes).}
+\item{kappa}{Numeric. Ratio of sample sizes (nA/nB). Default is 1.}
 
-\item{alpha}{Numeric. Significance level (Type I error rate).}
+\item{alpha}{Numeric. Type I error rate.}
 
-\item{beta}{Numeric (optional). Type II error rate (1 - power). Required when calculating required sample size.}
+\item{beta}{Numeric (optional). Type II error rate. Required for sample size calculation.}
 
-\item{nB}{Integer (optional). Sample size for group B. Required when calculating power.}
+\item{nB}{Integer (optional). Sample size for group B. Required for power calculation.}
 
-\item{test_type}{Character. Type of hypothesis test. Must be one of \code{"2-side"}, \code{"1-side"}, \code{"non-inferiority"}, or \code{"equivalence"}.}
+\item{test_type}{Character. \code{"2-side"}, \code{"1-side"}, \code{"non-inferiority"}, or \code{"equivalence"}. Default is \code{"2-side"}.}
 }
 \value{
-\itemize{
-\item If \code{beta} is provided and \code{nB} is NULL, returns the required sample size for group B (rounded up), with group A size determined by \code{kappa}.
-\item If \code{nB} is provided and \code{beta} is NULL, returns the achieved power.
-}
+Numeric. Returns sample size (if \code{beta} is given), or power (if \code{nB} is given).
 }
 \description{
-This function calculates the required sample size or achieved power for comparing two independent population proportions.
-It supports two-sided, one-sided, non-inferiority, and equivalence tests using normal approximation methods.
+Calculates sample size or power for a two-sample proportion test.
 }
-\details{
-Assumes independent samples and uses normal approximation for hypothesis testing on proportions.
-The \code{kappa} parameter allows for unequal sample sizes across the two groups (nB = kappa * nA).
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{nA}/\code{nB} (for power calculation) should be specified.
+
+Required arguments by \code{test_type}:
+\itemize{
+\item \code{"2-side"}/\code{"1-side"}:
+\itemize{
+\item For sample size: \code{pA}, \code{pB}, \code{alpha}, \code{beta}
+\item For power: \code{pA}, \code{pB}, \code{alpha}, \code{nB}
+}
+\item \code{"non-inferiority"}/\code{"equivalence"}:
+\itemize{
+\item For sample size: \code{pA}, \code{pB}, \code{delta},  \code{alpha}, \code{beta}
+\item For power: \code{pA}, \code{pB}, \code{delta}, \code{alpha}, \code{nB}
+}
+}
 }
 \examples{
-# Required sample size for two-sided test
-two_prop_size(pA = 0.6, pB = 0.5, alpha = 0.05, beta = 0.2, test_type = "2-side")
+# Sample size for `"2-side"` test
+two_prop_size(pA = 0.65, pB = 0.85, kappa = 1,
+              alpha = 0.05, beta = 0.2, test_type = "2-side")
 
-# Power calculation for one-sided test
-two_prop_size(pA = 0.55, pB = 0.5, alpha = 0.05, nB = 100, test_type = "1-side")
+# Power of `"2-side"` test
+two_prop_size(pA = 0.65, pB = 0.85, kappa = 1,
+              alpha = 0.05, nB = 70, test_type = "2-side")
+
+# Sample size for `"1-side"` test
+two_prop_size(pA = 0.65, pB = 0.85, kappa = 1,
+              alpha = 0.05, beta = 0.2, test_type = "1-side")
+
+# Power of `"1-sided"` test
+two_prop_size(pA = 0.65, pB = 0.85, kappa = 1,
+              alpha = 0.05, nB = 55, test_type = "1-side")
+
+# Sample size for `"non-inferiority"` test
+two_prop_size(pA = 0.85, pB = 0.65, delta = -0.1, kappa = 1,
+              alpha = 0.05, beta = 0.2, test_type = "non-inferiority")
+
+# Power of `"non-inferiority"` test
+two_prop_size(pA = 0.85, pB = 0.65, delta = -0.1, kappa = 1,
+              alpha = 0.05, nB = 25, test_type = "non-inferiority")
+
+# Sample size for `"equivalence"` test
+two_prop_size(pA = 0.65, pB = 0.85, delta = 0.05, kappa = 1,
+              alpha = 0.05, beta = 0.2, test_type = "equivalence")
+
+# Power of `"equivalence"` test
+two_prop_size(pA = 0.65, pB = 0.85, delta = 0.05, kappa = 1,
+              alpha = 0.05, nB = 136, test_type = "equivalence")
 
 }

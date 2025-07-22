@@ -1,27 +1,30 @@
-#' Sample Size or Power Calculation for One-Sample Binomial Proportion Test (Two-Sided)
+#' Sample Size or Power for One-Sample Binomial Proportion Test
 #'
-#' This function calculates either the required sample size or the achieved power for a two-sided test of a single binomial proportion.
-#' It uses a normal approximation to the binomial distribution for testing whether the true proportion differs from a hypothesized value.
+#' Calculates sample size or power for a two-sample binomial proportion test.
 #'
-#' @param p Numeric. The true proportion under the alternative hypothesis.
-#' @param p0 Numeric. The hypothesized proportion under the null hypothesis.
-#' @param alpha Numeric. Significance level (Type I error rate).
-#' @param beta Numeric (optional). Type II error rate (1 - power). Required when calculating the required sample size.
-#' @param n Integer (optional). Sample size. Required when calculating power.
+#' @param p Numeric. True proportion.
+#' @param p0 Numeric. Null hypothesis proportion.
+#' @param alpha Numeric. Type I error rate.
+#' @param beta Numeric (optional). Type II error rate. Required for sample size calculation.
+#' @param n Integer (optional). Sample size. Required for power calculation.
 #'
-#' @return
-#' - If `beta` is provided and `n` is NULL, returns the required sample size (rounded up).
-#' - If `n` is provided and `beta` is NULL, returns the achieved power of the test.
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `n` is given).
 #'
-#' @details
-#' The function uses the normal approximation to the binomial distribution. It assumes a two-sided z-test for a single binomial proportion.
+#' @note
+#' Only one of `beta` (for sample size calculation) or `n` (for power calculation) should be specified.
+#'
+#' Required arguments:
+#' - For sample size: `"p"`, `"p0"`, `"alpha"`, `"beta"`
+#' - For power: `"p"`, `"p0"`, `"alpha"`, `"n"`
 #'
 #' @examples
-#' # Required sample size for testing p = 0.55 vs p0 = 0.5
-#' one_bino_size(p = 0.55, p0 = 0.5, alpha = 0.05, beta = 0.2)
+#' # Required sample size
+#' one_bino_size(p = 0.5, p0 = 0.3,
+#'               alpha = 0.05, beta = 0.2)
 #'
-#' # Power with fixed sample size
-#' one_bino_size(p = 0.55, p0 = 0.5, alpha = 0.05, n = 100)
+#' # Power
+#' one_bino_size(p = 0.5, p0 = 0.3,
+#'               alpha = 0.05, n = 50)
 #'
 #' @export
 one_bino_size <- function(p, p0, alpha, beta = NULL, n = NULL) {

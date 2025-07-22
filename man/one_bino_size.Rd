@@ -2,39 +2,43 @@
 % Please edit documentation in R/one_bino_size.R
 \name{one_bino_size}
 \alias{one_bino_size}
-\title{Sample Size or Power Calculation for One-Sample Binomial Proportion Test (Two-Sided)}
+\title{Sample Size or Power for One-Sample Binomial Proportion Test}
 \usage{
 one_bino_size(p, p0, alpha, beta = NULL, n = NULL)
 }
 \arguments{
-\item{p}{Numeric. The true proportion under the alternative hypothesis.}
+\item{p}{Numeric. True proportion.}
 
-\item{p0}{Numeric. The hypothesized proportion under the null hypothesis.}
+\item{p0}{Numeric. Null hypothesis proportion.}
 
-\item{alpha}{Numeric. Significance level (Type I error rate).}
+\item{alpha}{Numeric. Type I error rate.}
 
-\item{beta}{Numeric (optional). Type II error rate (1 - power). Required when calculating the required sample size.}
+\item{beta}{Numeric (optional). Type II error rate. Required for sample size calculation.}
 
-\item{n}{Integer (optional). Sample size. Required when calculating power.}
+\item{n}{Integer (optional). Sample size. Required for power calculation.}
 }
 \value{
-\itemize{
-\item If \code{beta} is provided and \code{n} is NULL, returns the required sample size (rounded up).
-\item If \code{n} is provided and \code{beta} is NULL, returns the achieved power of the test.
-}
+Numeric. Returns sample size (if \code{beta} is given), or power (if \code{n} is given).
 }
 \description{
-This function calculates either the required sample size or the achieved power for a two-sided test of a single binomial proportion.
-It uses a normal approximation to the binomial distribution for testing whether the true proportion differs from a hypothesized value.
+Calculates sample size or power for a two-sample binomial proportion test.
 }
-\details{
-The function uses the normal approximation to the binomial distribution. It assumes a two-sided z-test for a single binomial proportion.
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{n} (for power calculation) should be specified.
+
+Required arguments:
+\itemize{
+\item For sample size: \code{"p"}, \code{"p0"}, \code{"alpha"}, \code{"beta"}
+\item For power: \code{"p"}, \code{"p0"}, \code{"alpha"}, \code{"n"}
+}
 }
 \examples{
-# Required sample size for testing p = 0.55 vs p0 = 0.5
-one_bino_size(p = 0.55, p0 = 0.5, alpha = 0.05, beta = 0.2)
+# Required sample size
+one_bino_size(p = 0.5, p0 = 0.3,
+              alpha = 0.05, beta = 0.2)
 
-# Power with fixed sample size
-one_bino_size(p = 0.55, p0 = 0.5, alpha = 0.05, n = 100)
+# Power
+one_bino_size(p = 0.5, p0 = 0.3,
+              alpha = 0.05, n = 50)
 
 }

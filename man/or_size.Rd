@@ -2,7 +2,7 @@
 % Please edit documentation in R/or_size.R
 \name{or_size}
 \alias{or_size}
-\title{Sample Size or Power Calculation for Odds Ratio Tests}
+\title{Sample Size or Power for Odds Ratio Test}
 \usage{
 or_size(
   pA,
@@ -16,41 +16,68 @@ or_size(
 )
 }
 \arguments{
-\item{pA}{Numeric. Proportion in group A (e.g., treatment group).}
+\item{pA}{Numeric. True proportion of group A.}
 
-\item{pB}{Numeric. Proportion in group B (e.g., control group).}
+\item{pB}{Numeric. True proportion of group B.}
 
-\item{delta}{Numeric (optional). Non-inferiority or equivalence margin on the log-odds scale. Required for \code{"non-inferiority"} and \code{"equivalence"} tests.}
+\item{delta}{Numeric (optional). Margin for \code{"non-inferiority"} or \code{"equivalence"} test. Required for \code{"non-inferiority"} or \code{"equivalence"} test.}
 
-\item{kappa}{Numeric. Ratio of sample sizes (nB/nA). Defaults to 1 (equal sample sizes).}
+\item{kappa}{Numeric. Ratio of sample sizes (nA/nB). Default is 1.}
 
-\item{alpha}{Numeric. Significance level (Type I error rate).}
+\item{alpha}{Numeric. Type I error rate.}
 
-\item{beta}{Numeric (optional). Type II error rate (1 - power). Required when computing required sample size.}
+\item{beta}{Numeric (optional). Type II error rate. Required for sample size calculation.}
 
-\item{nB}{Integer (optional). Sample size for group B. Required when computing power.}
+\item{nB}{Integer (optional). Sample size for group B. Required for power calculation.}
 
-\item{test_type}{Character. Type of hypothesis test. Must be one of \code{"equality"}, \code{"non-inferiority"}, or \code{"equivalence"}.}
+\item{test_type}{Character. \code{"equality"}, \code{"non-inferiority"}, or \code{"equivalence"}. Default is \code{"2-side"}.}
 }
 \value{
-\itemize{
-\item If \code{beta} is provided and \code{nB} is NULL, returns the required sample size for group B (rounded up); group A size is determined by \code{kappa}.
-\item If \code{nB} is provided and \code{beta} is NULL, returns the achieved power of the test.
-}
+Numeric. Returns sample size (if \code{beta} is given), or power (if \code{nB} is given).
 }
 \description{
-This function computes the required sample size or the achieved power for hypothesis tests comparing two independent proportions
-using the odds ratio. It supports equality, non-inferiority, and equivalence tests based on the logarithm of the odds ratio.
+Calculates sample size or power for odds ratio test.
 }
-\details{
-The function uses a normal approximation for the distribution of the log-odds ratio. The sample size calculation accounts for group allocation ratio (\code{kappa})
-and variance of the log-odds estimate. The margin \code{delta} must be specified for non-inferiority and equivalence designs.
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{nB} (for power calculation) should be specified.
+
+Required arguments by \code{test_type}:
+\itemize{
+\item \code{"equality"}:
+\itemize{
+\item For sample size: \code{pA}, \code{pB}, \code{alpha}, \code{beta}
+\item For power: \code{pA}, \code{pB}, \code{alpha}, \code{nB}
+}
+\item \code{"non-inferiority"}/\code{"equivalence"}:
+\itemize{
+\item For sample size: \code{pA}, \code{pB}, \code{delta},  \code{alpha}, \code{beta}
+\item For power: \code{pA}, \code{pB}, \code{delta}, \code{alpha}, \code{nB}
+}
+}
 }
 \examples{
-# Required sample size for odds ratio equality test
-or_size(pA = 0.6, pB = 0.5, alpha = 0.05, beta = 0.2, test_type = "equality")
+# Sample size for `"equality"` test
+or_size(pA = 0.4, pB = 0.25, kappa = 1,
+        alpha = 0.05, beta = 0.2, test_type = "equality")
 
-# Power calculation for equivalence test
-or_size(pA = 0.55, pB = 0.5, delta = 0.2, alpha = 0.05, nB = 100, test_type = "equivalence")
+# Power of `"equality"` test
+or_size(pA = 0.4, pB = 0.25, kappa = 1,
+        alpha = 0.05, nB = 156, test_type = "equality")
+
+# Sample size for `"non-inferiority"` test
+or_size(pA = 0.4, pB = 0.25, delta = 0.2, kappa = 1,
+        alpha = 0.05, beta = 0.2, test_type = "non-inferiority")
+
+# Power of `"non-inferiority"` test
+or_size(pA = 0.4, pB = 0.25, delta = 0.2, kappa = 1,
+        alpha = 0.05, nB = 242, test_type = "non-inferiority")
+
+# Sample size for `"equivalence"` test
+or_size(pA = 0.25, pB = 0.25, delta = 0.5, kappa = 1,
+        alpha = 0.05, beta = 0.2, test_type = "equivalence")
+
+# Power of `"equivalence"` test
+or_size(pA = 0.25, pB = 0.25, delta = 0.5, kappa = 1,
+        alpha = 0.05, nB = 366, test_type = "equivalence")
 
 }

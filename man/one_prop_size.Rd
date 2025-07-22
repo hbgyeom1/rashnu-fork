@@ -2,7 +2,7 @@
 % Please edit documentation in R/one_prop_size.R
 \name{one_prop_size}
 \alias{one_prop_size}
-\title{Sample Size or Power Calculation for One-Sample Proportion Test}
+\title{Sample Size or Power for One-Sample Proportion Test}
 \usage{
 one_prop_size(
   p,
@@ -15,39 +15,74 @@ one_prop_size(
 )
 }
 \arguments{
-\item{p}{Numeric. The true population proportion under the alternative hypothesis.}
+\item{p}{Numeric. True proportion.}
 
-\item{p0}{Numeric. The hypothesized proportion under the null hypothesis.}
+\item{p0}{Numeric. Null hypothesis proportion.}
 
-\item{delta}{Numeric (optional). The non-inferiority or equivalence margin. Required for \code{"non-inferiority"} and \code{"equivalence"} tests.}
+\item{delta}{Numeric (optional). Margin for \code{"non-inferiority"} or \code{"equivalence"} test. Required for \code{"non-inferiority"} or \code{"equivalence"} test.}
 
-\item{alpha}{Numeric. Significance level (Type I error rate).}
+\item{alpha}{Numeric. Type I error rate.}
 
-\item{beta}{Numeric (optional). Type II error rate (1 - power). Required when calculating required sample size.}
+\item{beta}{Numeric (optional). Type II error rate. Required for sample size calculation.}
 
-\item{n}{Integer (optional). Sample size. Required when calculating power.}
+\item{n}{Integer (optional). Sample size. Required for power calculation.}
 
-\item{test_type}{Character. Type of hypothesis test. Must be one of \code{"2-side"}, \code{"1-side"}, \code{"non-inferiority"}, or \code{"equivalence"}.}
+\item{test_type}{Character. \code{"2-side"}, \code{"1-side"}, \code{"non-inferiority"}, or \code{"equivalence"}. Default is \code{"2-side"}.}
 }
 \value{
-\itemize{
-\item If \code{beta} is provided and \code{n} is NULL, returns the required sample size (rounded up).
-\item If \code{n} is provided and \code{beta} is NULL, returns the achieved power.
-}
+Numeric. Returns sample size (if \code{beta} is given), or power (if \code{n} is given).
 }
 \description{
-This function calculates either the required sample size or the power for hypothesis testing on a single population proportion.
-It supports two-sided, one-sided, non-inferiority, and equivalence tests, with normal approximation methods.
+Calculates sample size or power for a one-sample proportion test.
 }
-\details{
-The function uses normal approximations to calculate sample size and power.
-The one-sided test uses a modified variance approach based on the null hypothesis proportion.
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{n} (for power calculation) should be specified.
+
+Required arguments by \code{test_type}:
+\itemize{
+\item \code{"2-side"}/\verb{"1-side}:
+\itemize{
+\item For sample size: \code{p}, \code{p0}, \code{alpha}, \code{beta}
+\item For power: \code{p}, \code{p0}, \code{alpha}, \code{n}
+}
+\item \code{"non-inferiority"}/\code{"equivalence"}:
+\itemize{
+\item For sample size: \code{p}, \code{p0}, \code{delta}, \code{alpha}, \code{beta}
+\item For power: \code{p}, \code{p0}, \code{sdA}, \code{delta}, \code{alpha}, \code{n}
+}
+}
 }
 \examples{
-# Required sample size for a two-sided test
-one_prop_size(p = 0.55, p0 = 0.5, alpha = 0.05, beta = 0.2, test_type = "2-side")
+# Sample size for `"2-side"` test
+one_prop_size(p = 0.5, p0 = 0.3,
+              alpha = 0.05, beta = 0.2, test_type = "2-side")
 
-# Power of a one-sided test with given sample size
-one_prop_size(p = 0.6, p0 = 0.5, alpha = 0.05, n = 100, test_type = "1-side")
+# Power of `"2-side"` test
+one_prop_size(p = 0.5, p0 = 0.3,
+              alpha = 0.05, n = 50, test_type = "2-side")
+
+# Sample size for `"1-side"` test
+one_prop_size(p = 0.05, p0 = 0.02,
+              alpha = 0.05, beta = 0.2, test_type = "1-side")
+
+# Power of `"1-sided"` test
+one_prop_size(p = 0.05, p0 = 0.02,
+              alpha = 0.05, n = 191, test_type = "1-side")
+
+# Sample size for `"non-inferiority"` test
+one_prop_size(p = 0.5, p0 = 0.3, delta = -0.1,
+              alpha = 0.05, beta = 0.2, test_type = "non-inferiority")
+
+# Power of `"non-inferiority"` test
+one_prop_size(p = 0.5, p0 = 0.3, delta = -0.1,
+              alpha = 0.05, n = 18, test_type = "non-inferiority")
+
+# Sample size for `"equivalence"` test
+one_prop_size(p = 0.6, p0 = 0.6, delta = 0.2,
+              alpha = 0.05, beta = 0.2, test_type = "equivalence")
+
+# Power of `"equivalence"` test
+one_prop_size(p = 0.6, p0 = 0.6, delta = 0.2,
+              alpha = 0.05, n = 52, test_type = "equivalence")
 
 }

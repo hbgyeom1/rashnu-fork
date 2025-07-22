@@ -11,7 +11,7 @@ k_mean_size(
   sd = NULL,
   sdA = NULL,
   sdB = NULL,
-  tau,
+  tau = 1,
   alpha,
   beta = NULL,
   n = NULL,
@@ -20,17 +20,17 @@ k_mean_size(
 )
 }
 \arguments{
-\item{muA}{Numeric. Mean of group A.}
+\item{muA}{Numeric. True mean of group A.}
 
-\item{muB}{Numeric. Mean of group B.}
+\item{muB}{Numeric. True mean of group B.}
 
-\item{kappa}{Numeric. Sample size ratio (nA / nB). Defaults to 1.}
+\item{kappa}{Numeric. Ratio of sample sizes (nA/nB). Default is 1.}
 
-\item{sd}{Numeric (optional). Standard deviation. Required for \code{"2-side"} tests.}
+\item{sd}{Numeric (optional). Standard deviation. Required for \code{"2-side"} test.}
 
-\item{sdA}{Numeric (optional). Standard deviation of group A. Required for \code{"1-side"} tests.}
+\item{sdA}{Numeric (optional). Standard deviation of group A. Required for \code{"1-side"} test.}
 
-\item{sdB}{Numeric (optional). Standard deviation of group B. Required for \code{"1-side"} tests.}
+\item{sdB}{Numeric (optional). Standard deviation of group B. Required for \code{"1-side"} test.}
 
 \item{tau}{Integer. Number of comparisons.}
 
@@ -38,25 +38,51 @@ k_mean_size(
 
 \item{beta}{Numeric (optional). Type II error rate (1 - power). Required for sample size calculation.}
 
-\item{n}{Integer (optional). Sample size. Required when calculating power for \code{"two-sided"} test.}
+\item{n}{Integer (optional). Sample size. Required for power calculation of \code{"2-side"} test.}
 
-\item{nA}{Integer (optional). Sample size of group A. Required when calculating power for \code{"one-sided"} tests.}
+\item{nA}{Integer (optional). Sample size of group A. Required for power calculation of \code{"1-side"} test.}
 
-\item{test_type}{Character. Type of test: \code{"2-side"}, \code{"1-side"}.}
+\item{test_type}{Character. \code{"2-side"} or \code{"1-side"}. Default is \code{"2-side"}}
 }
 \value{
-Numeric.
-Returns the required sample size (if beta is given), or the power (if n* is given).
+Numeric. Returns sample size (if \code{beta} is given), or power (if \code{n}/\code{nA} is given).
 }
 \description{
-Calculates the required sample size or achieved power for testing the difference between K means.
-Supports two-sided and one-sided tests.
+Calculates sample size or power for a multiple-sample mean test.
+}
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{n}/\code{nA} (for power calculation) should be specified.
+
+Required arguments by \code{test_type}:
+\itemize{
+\item \code{"2-side"}:
+\itemize{
+\item For sample size: \code{muA}, \code{muB}, \code{sd}, \code{tau}, \code{alpha}, \code{beta}
+\item For power: \code{muA}, \code{muB}, \code{sd}, \code{tau}, \code{alpha}, \code{n}
+}
+}
+
+-\code{"1-side"}:
+\itemize{
+\item For sample size: \code{muA}, \code{muB}, \code{sdA}, \code{sdB}, \code{tau}, \code{alpha}, \code{beta}
+\item For power: \code{muA}, \code{muB}, \code{sdA}, \code{sdB}, \code{tau}, \code{alpha}, \code{nA}
+}
 }
 \examples{
-# Required sample size for two-sided test with multiple comparisons
-k_mean_size(muA = 105, muB = 100, sd = 15, tau = 3, alpha = 0.05, beta = 0.2, test_type = "2-side")
+# Sample size for `"2-side"` test
+k_mean_size(muA = 5, muB = 10, sd = 10, tau = 1,
+            alpha = 0.05, beta = 0.2, test_type = "2-side")
 
-# Power calculation for one-sided test with different variances
-k_mean_size(muA = 102, muB = 100, sdA = 10, sdB = 12, tau = 5, alpha = 0.05, nA = 30, test_type = "1-side")
+# Power of `"2-side"` test
+k_mean_size(muA = 5, muB = 10, sd = 10, tau = 1,
+            alpha = 0.05, n = 63, test_type = "2-side")
+
+# Sample size for `"1-side"` test
+k_mean_size(muA = 132.86, muB = 127.44, kappa = 2, sdA = 15.34, sdB = 18.23, tau = 1,
+            alpha = 0.05, beta = 0.2, test_type = "1-side")
+
+# Power of `"1-side"` test
+k_mean_size(muA = 132.86, muB = 127.44, kappa = 2, sdA = 15.34, sdB = 18.23, tau = 1,
+            alpha = 0.05, nA = 85, test_type = "1-side")
 
 }

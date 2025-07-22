@@ -1,3 +1,21 @@
+# rashnu 0.1.2
+
+* Added new functions for sample size and power calculation:
+  - `one_mean_size()`
+  - `two_mean_size()`
+  - `k_mean_size()`
+  - `one_prop_size()`
+  - `two_prop_size()`
+  - `pair_prop_size()`
+  - `k_prop_size()`
+  - `coxph_size()`
+  - `or_size()`
+  - `sccs_size()`
+  - `one_norm_size()`
+  - `one_bino_size()`
+
+* Added Rstudio Addin "Power and Sample Size Calculator"
+
 # rashnu 0.1.1
 
 * Adjusted `numericInput` step size in the Shiny interface for finer control over input values.

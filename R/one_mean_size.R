@@ -1,48 +1,62 @@
-#' Sample Size or Power Calculation for One-Sample Mean Test
+#' Sample Size or Power for One-Sample Mean Test
 #'
-#' Calculates the required sample size or the achieved power for testing a single population mean.
-#' Supports two-sided, one-sided, non-inferiority, and equivalence tests.
+#' Calculates sample size or power for a one-sample mean test.
 #'
-#' @param mu Numeric. True mean under the alternative hypothesis.
-#' @param mu0 Numeric. Mean under the null hypothesis.
-#' @param delta Numeric (optional). Margin for non-inferiority or equivalence tests. Required for `"non-inferiority"` and `"equivalence"` tests.
+#' @param mu Numeric. True mean.
+#' @param mu0 Numeric. Null hypothesis mean.
+#' @param delta Numeric (optional). Margin for `"non-inferiority"` or `"equivalence"` test. Required for `"non-inferiority"` or `"equivalence"` test.
 #' @param sd Numeric. Standard deviation.
 #' @param alpha Numeric. Type I error rate.
-#' @param beta Numeric (optional). Type II error rate (1 - power). Required for sample size calculation.
-#' @param n Integer (optional). Sample size. Required when calculating power
-#' @param test_type Character. Type of test: "2-side", "1-side", "non-inferiority", or "equivalence".
+#' @param beta Numeric (optional). Type II error rate. Required for sample size calculation.
+#' @param n Integer (optional). Sample size. Required for power calculation.
+#' @param test_type Character. `"2-side"`, `"1-side"`, `"non-inferiority"`, or `"equivalence"`. Default is `"2-side"`.
 #'
-#' @return
-#' Numeric.
-#' Returns the required sample size (if beta is given), or the power (if n is given).
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `n` is given).
 #'
 #' @note
-#' Only one of `beta` or `n` should be specified. Supplying both will result in undefined behavior.
+#' Only one of `beta` (for sample size calculation) or `n` (for power calculation) should be specified.
+#'
+#' Required arguments by `test_type`:
+#' - `"2-side"` / `"1-side"`:
+#'   - For sample size: `mu`, `mu0`, `sd`, `alpha`, `beta`
+#'   - For power: `mu`, `mu0`, `sd`, `alpha`, `n`
+#'
+#' - `"non-inferiority"` / `"equivalence"`:
+#'   - For sample size: `mu`, `mu0`, `delta`, `sd`, `alpha`, `beta`
+#'   - For power: `mu`, `mu0`, `delta`, `sd`, `alpha`, `n`
 #'
 #' @examples
-#' # Required sample size for two-sided test
-#' one_mean_size(mu = 2, mu0 = 1.5, sd = 1, alpha = 0.05, beta = 0.2, test_type = "2-side")
+#' # Sample size for `"2-side"` test
+#' one_mean_size(mu = 2, mu0 = 1.5, sd = 1,
+#'               alpha = 0.05, beta = 0.2, test_type = "2-side")
 #'
-#' # Power of two-sided test
-#' one_mean_size(mu = 2, mu0 = 1.5, sd = 1, alpha = 0.05, n = 32, test_type = "2-side")
+#' # Power of `"2-side"` test
+#' one_mean_size(mu = 2, mu0 = 1.5, sd = 1,
+#'               alpha = 0.05, n = 32, test_type = "2-side")
 #'
-#' # Required sample size for one-sided test
-#' one_mean_size(mu = 115, mu0 = 120, sd = 24, alpha = 0.05, beta = 0.2, test_type = "1-side")
+#' # Sample size for `"1-side"` test
+#' one_mean_size(mu = 115, mu0 = 120, sd = 24,
+#'               alpha = 0.05, beta = 0.2, test_type = "1-side")
 #'
-#' # Power of one-sided test
-#' one_mean_size(mu = 115, mu0 = 120, sd = 24, alpha = 0.05, n = 143, test_type = "1-side")
+#' # Power of `"1-side"` test
+#' one_mean_size(mu = 115, mu0 = 120, sd = 24,
+#'               alpha = 0.05, n = 143, test_type = "1-side")
 #'
-#' # Required sample size for non-inferiority test
-#' one_mean_size(mu = 2, mu0 = 1.5, delta = -0.5, sd = 1, alpha = 0.05, beta = 0.2, test_type = "non-inferiority")
+#' # Sample size for `"non-inferiority"` test
+#' one_mean_size(mu = 2, mu0 = 1.5, delta = -0.5, sd = 1,
+#'               alpha = 0.05, beta = 0.2, test_type = "non-inferiority")
 #'
-#' # Power of non-inferiority test
-#' one_mean_size(mu = 2, mu0 = 1.5, delta = -0.5, sd = 1, alpha = 0.05, n = 7, test_type = "non-inferiority")
+#' # Power of `"non-inferiority"` test
+#' one_mean_size(mu = 2, mu0 = 1.5, delta = -0.5, sd = 1,
+#'               alpha = 0.05, n = 7, test_type = "non-inferiority")
 #'
-#' # Required sample size for equivalence test
-#' one_mean_size(mu = 2, mu0 = 2, delta = 0.05, sd = 0.1, alpha = 0.05, beta = 0.2, test_type = "equivalence")
+#' # Sample size for `"equivalence"` test
+#' one_mean_size(mu = 2, mu0 = 2, delta = 0.05, sd = 0.1,
+#'               alpha = 0.05, beta = 0.2, test_type = "equivalence")
 #'
-#' # Power of equivalence test
-#' one_mean_size(mu = 2, mu0 = 2, delta = 0.05, sd = 0.1, alpha = 0.05, n = 35, test_type = "equivalence")
+#' # Power of `"equivalence"` test
+#' one_mean_size(mu = 2, mu0 = 2, delta = 0.05, sd = 0.1,
+#'               alpha = 0.05, n = 35, test_type = "equivalence")
 #'
 #' @export
 one_mean_size <- function(mu, mu0, delta = NULL, sd, alpha, beta = NULL, n = NULL, test_type = "2-side") {

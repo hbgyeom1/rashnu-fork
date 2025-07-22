@@ -1,30 +1,61 @@
-#' Sample Size or Power Calculation for One-Sample Proportion Test
+#' Sample Size or Power for One-Sample Proportion Test
 #'
-#' This function calculates either the required sample size or the power for hypothesis testing on a single population proportion.
-#' It supports two-sided, one-sided, non-inferiority, and equivalence tests, with normal approximation methods.
+#' Calculates sample size or power for a one-sample proportion test.
 #'
-#' @param p Numeric. The true population proportion under the alternative hypothesis.
-#' @param p0 Numeric. The hypothesized proportion under the null hypothesis.
-#' @param delta Numeric (optional). The non-inferiority or equivalence margin. Required for `"non-inferiority"` and `"equivalence"` tests.
-#' @param alpha Numeric. Significance level (Type I error rate).
-#' @param beta Numeric (optional). Type II error rate (1 - power). Required when calculating required sample size.
-#' @param n Integer (optional). Sample size. Required when calculating power.
-#' @param test_type Character. Type of hypothesis test. Must be one of `"2-side"`, `"1-side"`, `"non-inferiority"`, or `"equivalence"`.
+#' @param p Numeric. True proportion.
+#' @param p0 Numeric. Null hypothesis proportion.
+#' @param delta Numeric (optional). Margin for `"non-inferiority"` or `"equivalence"` test. Required for `"non-inferiority"` or `"equivalence"` test.
+#' @param alpha Numeric. Type I error rate.
+#' @param beta Numeric (optional). Type II error rate. Required for sample size calculation.
+#' @param n Integer (optional). Sample size. Required for power calculation.
+#' @param test_type Character. `"2-side"`, `"1-side"`, `"non-inferiority"`, or `"equivalence"`. Default is `"2-side"`.
 #'
-#' @return
-#' - If `beta` is provided and `n` is NULL, returns the required sample size (rounded up).
-#' - If `n` is provided and `beta` is NULL, returns the achieved power.
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `n` is given).
 #'
-#' @details
-#' The function uses normal approximations to calculate sample size and power.
-#' The one-sided test uses a modified variance approach based on the null hypothesis proportion.
+#' @note
+#' Only one of `beta` (for sample size calculation) or `n` (for power calculation) should be specified.
+#'
+#' Required arguments by `test_type`:
+#' - `"2-side"`/`"1-side`:
+#'   - For sample size: `p`, `p0`, `alpha`, `beta`
+#'   - For power: `p`, `p0`, `alpha`, `n`
+#'
+#' - `"non-inferiority"`/`"equivalence"`:
+#'   - For sample size: `p`, `p0`, `delta`, `alpha`, `beta`
+#'   - For power: `p`, `p0`, `sdA`, `delta`, `alpha`, `n`
 #'
 #' @examples
-#' # Required sample size for a two-sided test
-#' one_prop_size(p = 0.55, p0 = 0.5, alpha = 0.05, beta = 0.2, test_type = "2-side")
+#' # Sample size for `"2-side"` test
+#' one_prop_size(p = 0.5, p0 = 0.3,
+#'               alpha = 0.05, beta = 0.2, test_type = "2-side")
 #'
-#' # Power of a one-sided test with given sample size
-#' one_prop_size(p = 0.6, p0 = 0.5, alpha = 0.05, n = 100, test_type = "1-side")
+#' # Power of `"2-side"` test
+#' one_prop_size(p = 0.5, p0 = 0.3,
+#'               alpha = 0.05, n = 50, test_type = "2-side")
+#'
+#' # Sample size for `"1-side"` test
+#' one_prop_size(p = 0.05, p0 = 0.02,
+#'               alpha = 0.05, beta = 0.2, test_type = "1-side")
+#'
+#' # Power of `"1-sided"` test
+#' one_prop_size(p = 0.05, p0 = 0.02,
+#'               alpha = 0.05, n = 191, test_type = "1-side")
+#'
+#' # Sample size for `"non-inferiority"` test
+#' one_prop_size(p = 0.5, p0 = 0.3, delta = -0.1,
+#'               alpha = 0.05, beta = 0.2, test_type = "non-inferiority")
+#'
+#' # Power of `"non-inferiority"` test
+#' one_prop_size(p = 0.5, p0 = 0.3, delta = -0.1,
+#'               alpha = 0.05, n = 18, test_type = "non-inferiority")
+#'
+#' # Sample size for `"equivalence"` test
+#' one_prop_size(p = 0.6, p0 = 0.6, delta = 0.2,
+#'               alpha = 0.05, beta = 0.2, test_type = "equivalence")
+#'
+#' # Power of `"equivalence"` test
+#' one_prop_size(p = 0.6, p0 = 0.6, delta = 0.2,
+#'               alpha = 0.05, n = 52, test_type = "equivalence")
 #'
 #' @export
 one_prop_size <- function(p, p0, delta = NULL, alpha, beta = NULL, n = NULL, test_type = "2-side") {

@@ -2,3 +2,8 @@ Name: Interactive Sample Size Calculator
 Description: RStudio Addin for Calculating Sample Size
 Binding: rashnuBasic
 Interactive: true
+
+Name: Power and Sample Size Calculator
+Description: Launch Power and Sample Size Calculator
+Binding: addin2
+Interactive: true

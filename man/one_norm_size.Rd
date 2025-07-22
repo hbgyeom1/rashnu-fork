@@ -2,41 +2,45 @@
 % Please edit documentation in R/one_norm_size.R
 \name{one_norm_size}
 \alias{one_norm_size}
-\title{Sample Size or Power Calculation for One-Sample Normal Test (Two-Sided)}
+\title{Sample Size or Power Calculation for One-Sample Normal Mean Test}
 \usage{
 one_norm_size(mu, mu0, sd, alpha, beta = NULL, n = NULL)
 }
 \arguments{
-\item{mu}{Numeric. The true population mean under the alternative hypothesis.}
+\item{mu}{Numeric. True mean.}
 
-\item{mu0}{Numeric. The mean under the null hypothesis.}
+\item{mu0}{Numeric. Null hypothesis mean.}
 
-\item{sd}{Numeric. The known standard deviation of the population.}
+\item{sd}{Numeric. Standard deviation.}
 
-\item{alpha}{Numeric. Significance level (Type I error rate).}
+\item{alpha}{Numeric. Type I error rate.}
 
-\item{beta}{Numeric (optional). Type II error rate (1 - power). Required when computing required sample size.}
+\item{beta}{Numeric (optional). Type II error rate. Required for sample size calculation.}
 
-\item{n}{Integer (optional). Sample size. Required when computing power.}
+\item{n}{Integer (optional). Sample size. Required for power calculation.}
 }
 \value{
-\itemize{
-\item If \code{beta} is provided and \code{n} is NULL, returns the required sample size (rounded up).
-\item If \code{n} is provided and \code{beta} is NULL, returns the achieved power of the test.
-}
+Numeric. Returns sample size (if \code{beta} is given), or power (if \code{n} is given).
 }
 \description{
-This function computes the required sample size or the achieved power for a two-sided test of a single population mean,
-assuming normally distributed data with known standard deviation.
+Calculates sample size or power for a two-sample normal mean test.
 }
-\details{
-This function assumes a two-sided z-test for a single mean with known variance using normal approximation.
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{n} (for power calculation) should be specified.
+
+Required arguments:
+\itemize{
+\item For sample size: \code{"mu"}, \code{"mu0"}, \code{"sd"}, \code{"alpha"}, \code{"beta"}
+\item For power: \code{"mu"}, \code{"mu0"}, \code{"sd"}, \code{"alpha"}, \code{"n"}
+}
 }
 \examples{
-# Calculate required sample size
-one_norm_size(mu = 105, mu0 = 100, sd = 15, alpha = 0.05, beta = 0.2)
+# Sample size
+one_norm_size(mu = 2, mu0 = 1.5, sd = 1,
+              alpha = 0.05, beta = 0.2)
 
-# Calculate power with fixed sample size
-one_norm_size(mu = 105, mu0 = 100, sd = 15, alpha = 0.05, n = 50)
+# Power
+one_norm_size(mu = 2, mu0 = 1.5, sd = 1,
+              alpha = 0.05, n = 32)
 
 }

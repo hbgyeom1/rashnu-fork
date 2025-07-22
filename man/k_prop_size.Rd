@@ -2,42 +2,45 @@
 % Please edit documentation in R/k_prop_size.R
 \name{k_prop_size}
 \alias{k_prop_size}
-\title{Sample Size or Power Calculation for Two-Sample Proportion Test with Multiple Comparisons}
+\title{Sample Size or Power Calculation for K proportion}
 \usage{
 k_prop_size(pA, pB, tau, alpha, beta = NULL, n = NULL)
 }
 \arguments{
-\item{pA}{Numeric. Proportion in group A (e.g., treatment group).}
+\item{pA}{Numeric. True proportion of group A.}
 
-\item{pB}{Numeric. Proportion in group B (e.g., control group).}
+\item{pB}{Numeric. True proportion of group B.}
 
-\item{tau}{Integer. Number of comparisons (used to adjust alpha level: alpha / (2 * tau)).}
+\item{tau}{Integer. Number of comparisons.}
 
-\item{alpha}{Numeric. Overall significance level (Type I error rate).}
+\item{alpha}{Numeric. Type I error rate.}
 
-\item{beta}{Numeric (optional). Type II error rate (1 - power). Required when computing required sample size.}
+\item{beta}{Numeric (optional). Type II error rate. Required for sample size calculation.}
 
-\item{n}{Integer (optional). Sample size per group. Required when computing power.}
+\item{n}{Integer (optional). Sample size. Required when calculating power.}
 }
 \value{
-\itemize{
-\item If \code{beta} is provided and \code{n} is NULL, returns the required sample size per group (rounded up) for desired power.
-\item If \code{n} is provided and \code{beta} is NULL, returns the achieved power of the test.
-}
+Returns sample size (if \code{beta} is given), or power (if \code{n} is given).
 }
 \description{
-This function calculates the required sample size or achieved power for comparing two independent proportions when multiple hypotheses are tested.
-It adjusts the significance level using a Bonferroni-style correction based on the number of comparisons (\code{tau}).
+Calculates sample size or power for a multiple-sample proportion test.
 }
-\details{
-The function assumes independent binomial samples and uses a normal approximation.
-The alpha level is adjusted for multiple comparisons using a Bonferroni correction (i.e., alpha / (2 * tau) for two-sided tests).
+\note{
+Only one of \code{beta} (for sample size calculation) or \code{n} (for power calculation) should be specified.
+
+Required arguments:
+\itemize{
+\item For sample size: \code{pA}, \code{pB}, \code{tau}, \code{alpha}, \code{beta}
+\item For power: \code{pA}, \code{pB}, \code{tau}, \code{alpha}, \code{n}
+}
 }
 \examples{
-# Required sample size for multiple comparisons (tau = 3)
-k_prop_size(pA = 0.6, pB = 0.5, tau = 3, alpha = 0.05, beta = 0.2)
+# Sample size
+k_prop_size(pA = 0.2, pB = 0.4, tau = 2,
+            alpha = 0.05, beta = 0.2)
 
-# Achieved power with known sample size
-k_prop_size(pA = 0.55, pB = 0.5, tau = 5, alpha = 0.05, n = 100)
+# Power
+k_prop_size(pA = 0.2, pB = 0.4, tau = 2,
+            alpha = 0.05, n = 96)
 
 }

@@ -1,34 +1,53 @@
 #' Sample Size or Power Calculation for K Means
 #'
-#' Calculates the required sample size or achieved power for testing the difference between K means.
-#' Supports two-sided and one-sided tests.
+#' Calculates sample size or power for a multiple-sample mean test.
 #'
-#' @param muA Numeric. Mean of group A.
-#' @param muB Numeric. Mean of group B.
-#' @param kappa Numeric. Sample size ratio (nA / nB). Defaults to 1.
-#' @param sd Numeric (optional). Standard deviation. Required for `"2-side"` tests.
-#' @param sdA Numeric (optional). Standard deviation of group A. Required for `"1-side"` tests.
-#' @param sdB Numeric (optional). Standard deviation of group B. Required for `"1-side"` tests.
+#' @param muA Numeric. True mean of group A.
+#' @param muB Numeric. True mean of group B.
+#' @param kappa Numeric. Ratio of sample sizes (nA/nB). Default is 1.
+#' @param sd Numeric (optional). Standard deviation. Required for `"2-side"` test.
+#' @param sdA Numeric (optional). Standard deviation of group A. Required for `"1-side"` test.
+#' @param sdB Numeric (optional). Standard deviation of group B. Required for `"1-side"` test.
 #' @param tau Integer. Number of comparisons.
 #' @param alpha Numeric. Type I error rate.
 #' @param beta Numeric (optional). Type II error rate (1 - power). Required for sample size calculation.
-#' @param n Integer (optional). Sample size. Required when calculating power for `"two-sided"` test.
-#' @param nA Integer (optional). Sample size of group A. Required when calculating power for `"one-sided"` tests.
-#' @param test_type Character. Type of test: `"2-side"`, `"1-side"`.
+#' @param n Integer (optional). Sample size. Required for power calculation of `"2-side"` test.
+#' @param nA Integer (optional). Sample size of group A. Required for power calculation of `"1-side"` test.
+#' @param test_type Character. `"2-side"` or `"1-side"`. Default is `"2-side"`
 #'
-#' @return
-#' Numeric.
-#' Returns the required sample size (if beta is given), or the power (if n* is given).
+#' @return Numeric. Returns sample size (if `beta` is given), or power (if `n`/`nA` is given).
+#'
+#' @note
+#' Only one of `beta` (for sample size calculation) or `n`/`nA` (for power calculation) should be specified.
+#'
+#' Required arguments by `test_type`:
+#' - `"2-side"`:
+#'   - For sample size: `muA`, `muB`, `sd`, `tau`, `alpha`, `beta`
+#'   - For power: `muA`, `muB`, `sd`, `tau`, `alpha`, `n`
+#'
+#' -`"1-side"`:
+#'   - For sample size: `muA`, `muB`, `sdA`, `sdB`, `tau`, `alpha`, `beta`
+#'   - For power: `muA`, `muB`, `sdA`, `sdB`, `tau`, `alpha`, `nA`
 #'
 #' @examples
-#' # Required sample size for two-sided test with multiple comparisons
-#' k_mean_size(muA = 105, muB = 100, sd = 15, tau = 3, alpha = 0.05, beta = 0.2, test_type = "2-side")
+#' # Sample size for `"2-side"` test
+#' k_mean_size(muA = 5, muB = 10, sd = 10, tau = 1,
+#'             alpha = 0.05, beta = 0.2, test_type = "2-side")
 #'
-#' # Power calculation for one-sided test with different variances
-#' k_mean_size(muA = 102, muB = 100, sdA = 10, sdB = 12, tau = 5, alpha = 0.05, nA = 30, test_type = "1-side")
+#' # Power of `"2-side"` test
+#' k_mean_size(muA = 5, muB = 10, sd = 10, tau = 1,
+#'             alpha = 0.05, n = 63, test_type = "2-side")
+#'
+#' # Sample size for `"1-side"` test
+#' k_mean_size(muA = 132.86, muB = 127.44, kappa = 2, sdA = 15.34, sdB = 18.23, tau = 1,
+#'             alpha = 0.05, beta = 0.2, test_type = "1-side")
+#'
+#' # Power of `"1-side"` test
+#' k_mean_size(muA = 132.86, muB = 127.44, kappa = 2, sdA = 15.34, sdB = 18.23, tau = 1,
+#'             alpha = 0.05, nA = 85, test_type = "1-side")
 #'
 #' @export
-k_mean_size <- function(muA, muB, kappa = 1, sd = NULL, sdA = NULL, sdB = NULL, tau, alpha, beta = NULL, n = NULL, nA = NULL, test_type = "2-side") {
+k_mean_size <- function(muA, muB, kappa = 1, sd = NULL, sdA = NULL, sdB = NULL, tau = 1, alpha, beta = NULL, n = NULL, nA = NULL, test_type = "2-side") {
   if (!is.null(beta)) {
     if (test_type == "2-side") {
       return(ceiling(2*(sd*(qnorm(1-alpha/(2/tau))+qnorm(1-beta))/(muA-muB))^2))
