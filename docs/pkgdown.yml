@@ -2,7 +2,7 @@ pandoc: '3.3'
 pkgdown: 2.1.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-07-22T07:45Z
+last_built: 2025-07-22T07:46Z
 urls:
   reference: https://hbgyeom1.github.io/rashnu-fork/reference
   article: https://hbgyeom1.github.io/rashnu-fork/articles
