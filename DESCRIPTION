@@ -1,6 +1,6 @@
 Package: rashnu
 Title: Balanced Sample Size and Power Calculation Tools
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person("Sungho", "Choi", , "1213sam0@gmail.com", role = c("aut", "cre")),
     person("Gyeom", "Hwangbo", , "hbgyeom0@gmail.com", role = c("ctb")),
